@@ -1,0 +1,118 @@
+{
+  "name": "abfarad",
+  "version": "0.0.0",
+  "description": "An ABF file converter",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest --detectOpenHandles",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "pack:mac": "electron-builder --dir --mac",
+    "pack:linux": "electron-builder --dir --linux",
+    "pack:win": "electron-builder --dir --win",
+    "pack:mwl": "electron-builder --dir -mwl",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux",
+    "dist:win": "electron-builder --win",
+    "dist:mwl": "electron-builder -mwl",
+    "dist:mwl:publish": "electron-builder -mwl --publish onTag"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dglmoore/abfarad.git"
+  },
+  "keywords": [
+    "electron",
+    "abf",
+    "bio",
+    "science"
+  ],
+  "author": "Douglas G. Moore <doug@dglmoore.com> (https://dglmoore.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dglmoore/abfarad/issues"
+  },
+  "homepage": "https://dglmoore.com/abfarad",
+  "jest": {
+    "coverageDirectory": "./coverage",
+    "collectCoverage": true
+  },
+  "build": {
+    "publish": {
+      "provider": "github"
+    },
+    "appId": "com.dglmoore.abfarad",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!test/",
+      "!docs/",
+      "!dist/"
+    ],
+    "linux": {
+      "packageCategory": "Science;Biology",
+      "description": "Abfarad Desktop Client for Linux",
+      "maintainer": "Douglas G. Moore <doug@dglmoore.com>",
+      "icon": "build/abfarad.png",
+      "target": [
+        {
+          "target": "deb",
+          "arch": "x64"
+        },
+        {
+          "target": "tar.gz",
+          "arch": "x64"
+        }
+      ]
+    },
+    "deb": {
+      "synopsis": "Abfarad Desktop App"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": "x64"
+        }
+      ]
+    },
+    "dmg": {
+      "icon": "build/abfarad.icns",
+      "iconSize": 128,
+      "contents": [
+        {
+          "x": 448,
+          "y": 340,
+          "type": "link",
+          "path": "Applications"
+        },
+        {
+          "x": 192,
+          "y": 340,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": "x64"
+        }
+      ],
+      "icon": "build/abfarad.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^2.0.14",
+    "electron-builder": "^20.36.2",
+    "eslint": "^5.9.0",
+    "eslint-plugin-jest": "^22.0.0",
+    "jest": "^23.6.0"
+  }
+}
