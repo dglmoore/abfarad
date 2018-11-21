@@ -4,8 +4,6 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
     let win = null;
 
     const create_window = function() {
-        win = new BrowserWindow();
-
         Menu.setApplicationMenu(new Menu.buildFromTemplate([
             {
                 label: 'File',
@@ -47,10 +45,18 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             }
         ]));
 
-        win.loadFile('index.html');
-        win.on('closed', function() {
+        win = new BrowserWindow({
+            width: 970,
+            height: 970,
+            show: false
+        }).on('ready-to-show', function() {
+            win.show();
+            win.send('status', 'Ready');
+        }).on('closed', function() {
             win = null;
         });
+
+        win.loadFile('assets/index.html');
     };
 
     app.on('ready', create_window);

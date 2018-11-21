@@ -1,0 +1,49 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	width: 100%;
+	padding: 0px;
+	height:100%;
+	margin: 0px 0px 100px 0px;
+}
+
+body div {
+	margin: 0px auto 0px auto;
+	text-align: center;
+}
+
+header {
+	background-color: #cccccc;
+	padding: 1em;
+	clear: none;
+	text-align: center;
+}
+
+footer {
+	color: black;
+	background-color: #bbbbbb;
+	clear: none;
+	text-align: left;
+	font-size: 14px;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	padding: 0px 0px;
+}
+
+footer span:first-child {
+    font-weight: bold;
+    padding: 0px 10px;
+}
+
+#startup: {
+    display: block;
+}
+
+#plot: {
+    display: none;
+}

@@ -1,6 +1,6 @@
-/* global document, Plotly */
+/* global d3, Plotly */
 const { ipcRenderer } = require('electron');
-const ABF = require('./abfjs/main');
+const ABF = require('../abfjs/main');
 const stringify = require('csv-stringify');
 const fs = require('fs');
 
@@ -27,7 +27,7 @@ const abfarad = Object.assign(Object.create({
         };
 
         const layout = {
-            title: `File: ${this.filename}`,
+            title: this.filename,
             xaxis: { title: sweep_x_label },
             yaxis: { title: sweep_y_label },
             showLegend: false,
@@ -81,15 +81,24 @@ const abfarad = Object.assign(Object.create({
                 detail: err.toString()
             });
         }).on('finish', function() {
-            document.getElementById('status').innerHTML = 'Export complete!';
+            this.status('Export complete.');
         });
+    },
+
+    status: function(s) {
+        d3.select('footer span:last-child').html(s);
     }
 }), { filename: null, abf: null });
 
 ipcRenderer.on('open', function(event, path) {
+    d3.selectAll('#startup').style('display', 'none');
     abfarad.load(path);
 });
 
 ipcRenderer.on('export', function(event, path) {
     abfarad.export_csv(path);
+});
+
+ipcRenderer.on('status', function(event, s) {
+    abfarad.status(s);
 });
