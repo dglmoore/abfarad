@@ -22,4 +22,4 @@ cache:
 
 script:
   - npm test
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run dist:mwl || cat /Users/travis/.npm/_logs/*.log; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run dist:mwl; fi
