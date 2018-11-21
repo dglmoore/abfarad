@@ -17,6 +17,13 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
                         click: open_dialog
                     },
                     {
+                        label: 'Export CSV',
+                        id: 'export',
+                        accelerator: 'CommandOrControl+E',
+                        enabled: false,
+                        click: export_dialog
+                    },
+                    {
                         label: 'Quit',
                         id: 'quit',
                         role: 'quit'
@@ -76,12 +83,31 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
         if (abf_path !== undefined) {
             if (abf_path.length === 1) {
                 browserWindow.send('open', abf_path[0]);
+                app.getApplicationMenu().getMenuItemById('export').enabled = true;
             } else {
                 error_dialog({
                     title: 'File Open Error',
                     message: 'Too many files selected, select only one'
                 });
             }
+        }
+    };
+
+    const export_dialog = function(menuItem, browserWindow) {
+        let export_path = dialog.showSaveDialog(browserWindow, {
+            title: 'Export as...',
+            buttonLabel: 'Export',
+            filters: [
+                { name: 'CSV', extensions: [ 'csv' ] },
+                { name: 'All Files', extensions: [ '*' ] },
+            ],
+            properties: [
+                'openFile'
+            ]
+        });
+
+        if (export_path !== undefined) {
+            browserWindow.send('export', export_path);
         }
     };
 
