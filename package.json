@@ -57,7 +57,6 @@
       "packageCategory": "Science;Biology",
       "description": "Abfarad Desktop Client for Linux",
       "maintainer": "Douglas G. Moore <doug@dglmoore.com>",
-      "icon": "build/abfarad.png",
       "target": [
         {
           "target": "deb",
@@ -82,7 +81,6 @@
       ]
     },
     "dmg": {
-      "icon": "build/abfarad.icns",
       "iconSize": 128,
       "contents": [
         {
@@ -104,8 +102,7 @@
           "target": "portable",
           "arch": "x64"
         }
-      ],
-      "icon": "build/abfarad.ico"
+      ]
     }
   },
   "devDependencies": {
