@@ -1,11 +1,11 @@
 /* global Plotly */
 const { ipcRenderer } = require('electron');
-const abfjs = require('abfjs');
+const ABF = require('./abfjs/main');
 
 const abfarad = Object.assign(Object.create({
     load: function(filename, div='plot') {
         try {
-            this.abf = abfjs(filename);
+            this.abf = ABF(filename);
             this.filename = filename;
         } catch (e) {
             ipcRenderer.send('error', {
