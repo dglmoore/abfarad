@@ -24,7 +24,6 @@ header {
 
 footer {
 	color: black;
-	background-color: #bbbbbb;
 	clear: none;
 	text-align: left;
 	font-size: 14px;
@@ -38,6 +37,14 @@ footer {
 footer span:first-child {
     font-weight: bold;
     padding: 0px 10px;
+}
+
+.info {
+    background-color: #bbbbbb;
+}
+
+.error {
+    background-color: #ccb7b7;
 }
 
 #startup: {

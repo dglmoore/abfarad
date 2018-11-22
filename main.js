@@ -51,7 +51,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             show: false
         }).on('ready-to-show', function() {
             win.show();
-            win.send('status', 'Ready');
+            win.send('info', 'Ready');
         }).on('closed', function() {
             win = null;
         });

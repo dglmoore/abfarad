@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const abfarad = Object.assign(Object.create({
     load: function(filename, div='plot') {
+        this.info(`Reading ${filename}...`);
         try {
             this.abf = ABF(filename);
             this.filename = filename;
@@ -13,10 +14,17 @@ const abfarad = Object.assign(Object.create({
             ipcRenderer.send('error', {
                 title: 'ABF Error',
                 message: `Cannot read ABF file "${filename}"`,
-                detail: e.toString()
+                detail: e.message
             });
+            this.error(`Cannot read ABF file '${filename}', ${e.message}.`);
             return;
         }
+        // this.info(`Reading of ${this.filename} complete.`);
+        this.plot(div);
+    },
+
+    plot: function(div='plot') {
+        // this.info(`Plotting ${this.filename}...`);
 
         const { sweep_x, sweep_x_label, sweep_y, sweep_y_label } = this.abf;
 
@@ -34,11 +42,15 @@ const abfarad = Object.assign(Object.create({
             hovermode: false
         };
 
+        d3.selectAll('#startup').style('display', 'none');
+
         Plotly.newPlot(div, [ trace ], layout, {
             displayLogo: false,
             responsive: true,
             displayModeBar: false
         });
+
+        this.info(`Plotting of ${this.filename} complete.`);
     },
 
     export_csv: function(csv_path) {
@@ -47,9 +59,11 @@ const abfarad = Object.assign(Object.create({
                 title: 'Export Error',
                 message: 'Open an ABF file before exporting'
             });
+            this.error('Cannot export before opening an ABF file');
             return;
         }
 
+        this.info('Collecting channel data');
         let data = new Array(this.abf.data_point_count);
         for (let channel = 0, i = 0; channel < this.abf.channel_count; ++channel) {
             let sample_times = this.abf.sample_times[channel],
@@ -62,36 +76,51 @@ const abfarad = Object.assign(Object.create({
             }
         }
 
-        let stringifier = stringify(data, {
-            header: true,
-            columns: ['channel', 'sweep', 'time', 'data']
-        });
+        let errored = false,
+            stringifier = stringify(data, {
+                header: true,
+                columns: ['channel', 'sweep', 'time', 'data']
+            });
 
-        stringifier.on('error', function(err) {
+        this.info(`Exporting "${this.filename}" to "${csv_path}"...`);
+        stringifier.on('error', (err) => {
+            errored = true;
             ipcRenderer.send('error', {
                 title: 'Export Error',
                 message: 'Cannot format ABF data',
-                detail: err.toString()
+                detail: err.message
             });
+            this.error(`Cannot format ABF data, ${err.message}`);
             stringifier.end();
-        }).pipe(fs.createWriteStream(csv_path)).on('error', function(err) {
+        }).pipe(fs.createWriteStream(csv_path)).on('error', (err) => {
+            errored = true;
             ipcRenderer.send('error', {
                 title: 'Export Error',
                 message: 'Cannot write CSV file',
-                detail: err.toString()
+                detail: err.message
             });
-        }).on('finish', function() {
-            this.status('Export complete.');
+            this.error(`Cannot write CSV file '${csv_path}', ${err.message}`);
+        }).on('finish', () => {
+            if (!errored) {
+                abfarad.info(`Export of "${this.filename}" to "${csv_path}" complete.`);
+            }
         });
     },
 
-    status: function(s) {
+    info: function(s) {
+        d3.select('footer').classed('error', false);
+        d3.select('footer').classed('info', true);
+        d3.select('footer span:last-child').html(s);
+    },
+
+    error: function(s) {
+        d3.select('footer').classed('info', false);
+        d3.select('footer').classed('error', true);
         d3.select('footer span:last-child').html(s);
     }
 }), { filename: null, abf: null });
 
 ipcRenderer.on('open', function(event, path) {
-    d3.selectAll('#startup').style('display', 'none');
     abfarad.load(path);
 });
 
@@ -99,6 +128,6 @@ ipcRenderer.on('export', function(event, path) {
     abfarad.export_csv(path);
 });
 
-ipcRenderer.on('status', function(event, s) {
-    abfarad.status(s);
+ipcRenderer.on('info', function(event, s) {
+    abfarad.info(s);
 });
