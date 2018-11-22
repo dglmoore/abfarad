@@ -47,7 +47,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
         win = new BrowserWindow({
             width: 970,
-            height: 970,
+            height: 700,
             show: false
         }).on('ready-to-show', function() {
             win.show();
