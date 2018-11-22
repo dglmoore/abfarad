@@ -1,7 +1,7 @@
 const ABF = require('../main');
 const path = require('path');
 
-const DATA_DIR = path.join('test', 'data');
+const DATA_DIR = path.join('abfjs', 'test', 'data');
 const TEST_FILE = path.join(DATA_DIR, '18710002.abf');
 let abf = null;
 

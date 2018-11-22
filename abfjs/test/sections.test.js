@@ -6,7 +6,7 @@ const is_abf = (filename) => path.extname(filename) === '.abf';
 const basename = (filename) => path.basename(filename, '.abf');
 
 const build_table = function() {
-    const data_dir = path.join('test', 'data');
+    const data_dir = path.join('abfjs', 'test', 'data');
     const abf_files = fs.readdirSync(data_dir).filter(is_abf);
 
     const header_files          = abf_files.map((f) => basename(f) + '-header.json');
