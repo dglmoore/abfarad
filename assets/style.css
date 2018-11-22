@@ -15,6 +15,15 @@ body div {
 	text-align: center;
 }
 
+body a, a:visited {
+    color: #000000;
+}
+
+body a:hover {
+    color: #555555;
+}
+
+
 header {
 	background-color: #cccccc;
 	padding: 1em;
@@ -47,10 +56,12 @@ footer span:first-child {
     background-color: #ccb7b7;
 }
 
-#startup: {
+#startup {
     display: block;
+    padding-top: 50px;
+    font-size: 20pt;
 }
 
-#plot: {
+#plot {
     display: none;
 }

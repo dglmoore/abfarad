@@ -51,7 +51,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             show: false
         }).on('ready-to-show', function() {
             win.show();
-            win.send('info', 'Ready');
+            win.send('ready');
         }).on('closed', function() {
             win = null;
         });
@@ -127,4 +127,6 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
     };
 
     ipcMain.on('error', (event, err) => error_dialog(err));
+
+    ipcMain.on('open', () => open_dialog(null, win));
 })();

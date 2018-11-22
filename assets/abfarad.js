@@ -5,6 +5,18 @@ const stringify = require('csv-stringify');
 const fs = require('fs');
 
 const abfarad = Object.assign(Object.create({
+    init: function() {
+        const accelerator = (process.platform === 'darwin') ? '⌘+O' : 'Ctrl+O';
+        d3.select('#startup a:first-child')
+            .html(`Open ABF File (${accelerator})`)
+            .on('click', () => this.open());
+        this.info('Ready');
+    },
+
+    open: function() {
+        ipcRenderer.send('open');
+    },
+
     load: function(filename, div='plot') {
         this.info(`Reading ${filename}...`);
         try {
@@ -19,12 +31,12 @@ const abfarad = Object.assign(Object.create({
             this.error(`Cannot read ABF file '${filename}', ${e.message}.`);
             return;
         }
-        // this.info(`Reading of ${this.filename} complete.`);
+        this.info(`Reading of ${this.filename} complete.`);
         this.plot(div);
     },
 
     plot: function(div='plot') {
-        // this.info(`Plotting ${this.filename}...`);
+        this.info(`Plotting ${this.filename}...`);
 
         const { sweep_x, sweep_x_label, sweep_y, sweep_y_label } = this.abf;
 
@@ -43,6 +55,7 @@ const abfarad = Object.assign(Object.create({
         };
 
         d3.selectAll('#startup').style('display', 'none');
+        d3.selectAll('#plot').style('display', 'block');
 
         Plotly.newPlot(div, [ trace ], layout, {
             displayLogo: false,
@@ -120,6 +133,10 @@ const abfarad = Object.assign(Object.create({
     }
 }), { filename: null, abf: null });
 
+ipcRenderer.on('ready', function() {
+    abfarad.init();
+});
+
 ipcRenderer.on('open', function(event, path) {
     abfarad.load(path);
 });
@@ -130,4 +147,8 @@ ipcRenderer.on('export', function(event, path) {
 
 ipcRenderer.on('info', function(event, s) {
     abfarad.info(s);
+});
+
+ipcRenderer.on('error', function(event, s) {
+    abfarad.error(s);
 });
