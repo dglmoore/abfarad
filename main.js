@@ -63,7 +63,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
     app.on('activate', function() {
         if (win === null) {
-            create_window(); 
+            create_window();
         }
     });
 
