@@ -113,7 +113,7 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
-    "@dglmoore/abf": "0.0.0",
-    "csv": "^4.0.0"
+    "@dglmoore/abf": "^0.0.1",
+    "csv": "^5.0.0"
   }
 }
