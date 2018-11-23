@@ -1,6 +1,6 @@
 /* global d3, Plotly */
 const { ipcRenderer } = require('electron');
-const ABF = require('../abfjs/main');
+const ABF = require('@dglmoore/abf');
 const stringify = require('csv-stringify');
 const fs = require('fs');
 
