@@ -2,7 +2,8 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
 (function() {
     let windows = {
-        main: null
+        main: null,
+        poincare: null
     };
 
     const create_window = function() {
@@ -31,6 +32,19 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
                 ]
             },
             {
+                label: 'Analysis',
+                id: 'analysis',
+                submenu: [
+                    {
+                        label: 'Poincaré Plot',
+                        id: 'poincaré',
+                        accelerator: 'CommandOrControl+P',
+                        enabled: false,
+                        click: poincare_plot
+                    }
+                ]
+            },
+            {
                 label: 'View',
                 submenu: [
                     {
@@ -55,6 +69,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             windows.main.show();
             windows.main.send('ready');
         }).on('closed', function() {
+            BrowserWindow.getAllWindows().forEach((w) => w.close());
             for (let w in windows) {
                 windows[w] = null;
             }
@@ -94,6 +109,7 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             if (abf_path.length === 1) {
                 browserWindow.send('open', abf_path[0]);
                 app.getApplicationMenu().getMenuItemById('export').enabled = true;
+                app.getApplicationMenu().getMenuItemById('poincaré').enabled = true;
             } else {
                 error_dialog({
                     title: 'File Open Error',
@@ -119,6 +135,25 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
         if (export_path !== undefined) {
             browserWindow.send('export', export_path);
         }
+    };
+
+    const poincare_plot = function() {
+        if (windows.poincare === null) {
+            windows.poincare = new BrowserWindow({
+                width: 700,
+                height: 700,
+                show: false
+            }).on('ready-to-show', function() {
+                windows.poincare.setMenu(null);
+                windows.poincare.show();
+            }).on('closed', function() {
+                windows.poincare = null;
+                app.getApplicationMenu().getMenuItemById('poincaré').enabled = true;
+            });
+
+            windows.poincare.loadURL('https://dglmoore.com');
+        }
+        app.getApplicationMenu().getMenuItemById('poincaré').enabled = false;
     };
 
     const error_dialog = function(options) {
