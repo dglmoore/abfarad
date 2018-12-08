@@ -1,7 +1,9 @@
 const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
 (function() {
-    let win = null;
+    let windows = {
+        main: null
+    };
 
     const create_window = function() {
         Menu.setApplicationMenu(new Menu.buildFromTemplate([
@@ -45,24 +47,26 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
             }
         ]));
 
-        win = new BrowserWindow({
+        windows.main = new BrowserWindow({
             width: 970,
             height: 700,
             show: false
         }).on('ready-to-show', function() {
-            win.show();
-            win.send('ready');
+            windows.main.show();
+            windows.main.send('ready');
         }).on('closed', function() {
-            win = null;
+            for (let w in windows) {
+                windows[w] = null;
+            }
         });
 
-        win.loadFile('assets/index.html');
+        windows.main.loadFile('assets/index.html');
     };
 
     app.on('ready', create_window);
 
     app.on('activate', function() {
-        if (win === null) {
+        if (windows.main === null) {
             create_window();
         }
     });
@@ -128,5 +132,5 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
     ipcMain.on('error', (event, err) => error_dialog(err));
 
-    ipcMain.on('open', () => open_dialog(null, win));
+    ipcMain.on('open', () => open_dialog(null, windows.main));
 })();
