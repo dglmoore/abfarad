@@ -152,3 +152,10 @@ ipcRenderer.on('info', function(event, s) {
 ipcRenderer.on('error', function(event, s) {
     abfarad.error(s);
 });
+
+ipcRenderer.on('poincare', function() {
+    const { sweep_y, sweep_y_label } = abfarad.abf;
+    ipcRenderer.send('poincare', {
+        sweep_y, sweep_y_label
+    });
+});

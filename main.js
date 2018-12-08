@@ -1,6 +1,8 @@
 const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
 
 (function() {
+    app.commandLine.appendSwitch('--ignore-gpu-blacklist');
+
     let windows = {
         main: null,
         poincare: null
@@ -137,21 +139,22 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
         }
     };
 
-    const poincare_plot = function() {
+    const poincare_plot = function(menuItem, browserWindow) {
         if (windows.poincare === null) {
             windows.poincare = new BrowserWindow({
                 width: 700,
                 height: 700,
                 show: false
             }).on('ready-to-show', function() {
-                windows.poincare.setMenu(null);
+                // windows.poincare.setMenu(null);
                 windows.poincare.show();
+                browserWindow.send('poincare');
             }).on('closed', function() {
                 windows.poincare = null;
                 app.getApplicationMenu().getMenuItemById('poincaré').enabled = true;
             });
 
-            windows.poincare.loadURL('https://dglmoore.com');
+            windows.poincare.loadFile('assets/poincare.html');
         }
         app.getApplicationMenu().getMenuItemById('poincaré').enabled = false;
     };
@@ -168,4 +171,10 @@ const { app, dialog, ipcMain, BrowserWindow, Menu } = require('electron');
     ipcMain.on('error', (event, err) => error_dialog(err));
 
     ipcMain.on('open', () => open_dialog(null, windows.main));
+
+    ipcMain.on('poincare', function(event, data) {
+        if (windows.poincare) {
+            windows.poincare.send('data', data);
+        }
+    });
 })();
