@@ -62,6 +62,20 @@ footer span:first-child {
     font-size: 20pt;
 }
 
+#loading {
+    margin: 100px auto;
+}
+
 #plot {
     display: none;
+}
+
+#data {
+    width: 100%;
+    display: none;
+    flex-justify: space-around;
+}
+
+#data input {
+    width: 5em;
 }

@@ -5,9 +5,29 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 </head>
 <body>
+    <div id="loading">
+        <img src="loading.gif" />
+    </div>
     <div id="plot"></div>
+    <div id="data">
+        <div>
+            <label for="sigma1">\(\sigma_1~=~\)</label>
+            <input type="text" name="sigmas" id="sigma1" readonly>
+        </div>
+
+        <div>
+            <label for="sigma2">\(\sigma_2~=~\)</label>
+            <input type="text" name="sigmas" id="sigma2" readonly>
+        </div>
+
+        <div>
+            <label for="sigma12">\(\frac{\sigma_1}{\sigma_2}~=~\)</label>
+            <input type="text" name="sigmas" id="sigma12" readonly>
+        </div>
+    <div>
     <script src="poincare.js"></script>
 </body>
 </html>
