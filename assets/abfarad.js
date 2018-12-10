@@ -43,7 +43,8 @@ const abfarad = Object.assign(Object.create({
         const trace = {
             x: sweep_x,
             y: sweep_y,
-            mode: 'lines'
+            mode: 'lines',
+            type: 'scattergl'
         };
 
         const layout = {
